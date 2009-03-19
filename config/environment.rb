@@ -109,6 +109,16 @@ Rails::Initializer.run do |config|
 
 end
 
+# HACK: Stuff that is failing in the intializers but still needs set before the app
+# starts.
+
+FileColumn::ClassMethods::DEFAULT_OPTIONS[:root_path] = File.join(RAILS_ROOT, "public", 'system')
+FileColumn::ClassMethods::DEFAULT_OPTIONS[:web_root] = 'system/'
+
+WhiteListHelper.tags.merge %w(table td th)
+WhiteListHelper.attributes.merge %w(id class style)
+
+
 # HACK: We rescue this block here because the line:
 # config.active_record.observers = :user_observer, :user_plone_observer
 # results in the User model to be loaded. This causes an error to be thrown

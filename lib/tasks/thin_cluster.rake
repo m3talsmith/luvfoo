@@ -28,12 +28,14 @@ namespace :thin do
       config["servers"].times do |i|
         port      = (config['port'] + i)
         pid_file  = config['pid_file'].split(".").join(".#{port}.")
+        log_file  = config['log_file'].split(".").join(".#{port}.")
         command = (%^
-thin start -A rails -d
+thin start -A rails
 -P #{pid_file}
 -p #{port}
--l #{config["log_file"]}
+-l #{log_file}
 -e #{config["environment"]}
+-d
         ^).split("\n").join(" ").strip!
         
         puts command

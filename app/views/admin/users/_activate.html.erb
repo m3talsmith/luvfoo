@@ -1,5 +1,0 @@
-<% if user.is_active? -%>
-	<%= link_to_remote _('deactivate'), { :url => formatted_admin_user_path(user, 'js'), :method => :put } -%>
-<% else -%>
-	<%= link_to_remote _('activate'), { :url => formatted_admin_user_path(user, 'js'), :method => :put } -%>
-<% end -%>

@@ -1,0 +1,5 @@
+<h1><%= _('Edit Event') %></h1>
+<%= render :partial => 'groups/group_nav', :locals => {:group => @group} %>
+<% custom_form_for @event, :url => group_event_path(@group, @event), :html => { :class => "box no_top" } do |f| -%>
+	<%= render :partial => 'form', :locals => {:f => f } %>
+<% end %>

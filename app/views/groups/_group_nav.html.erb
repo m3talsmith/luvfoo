@@ -1,0 +1,11 @@
+<div id="group_nav">
+    <%= link_to _('Main'), group_path(@group) %>
+    <%= link_to _('News'), group_news_index_path(@group) %>
+    <%= link_to _('Events'), group_events_path(@group) %>
+    <%= link_to _('Comments'), group_comments_path(@group) %>
+    <%= link_to _('Activity'), group_activities_path(@group) %>
+	<%= link_to _('Members'), group_memberships_path(@group) %>
+    <%= link_to _('Forum'), group_forums_path(@group) %>
+    <%= link_to _('Photos'), group_photos_path(@group) %>
+    <%= link_to _('Files'), group_uploads_path(@group) if member? %>
+</div>

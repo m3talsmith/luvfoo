@@ -1,0 +1,57 @@
+<div id="page" class="content-editor">
+	<% custom_form_for @content_page, :url => url, :html => html.merge(:id => 'editor-form', :class => "box no_top") do |f| -%>
+		<%= f.text_field :title, {:class => 'title'}.merge(options) %>
+		<% if edit -%>
+			<div id="edit-permalink-box" class="form-row">
+				<label>Permalink:</label>
+				<span id="permalink">
+					<%=GlobalConfig.website_home_url%>/pages/<span id="view-permalink"><%= @content_page.url_key %></span>
+					<span id="edit-permalink" style="display:none;">
+						<%= f.text_field :url_key, {:class => 'url-key', :id => 'url-key', :type => :default}.merge(options) %>
+					</span>				
+				</span>
+				<span id="edit-permalink-buttons">
+					<a id="permalink-edit" href="#url"><%= _('Edit') -%></a>
+				</span>
+				<span id="finish-permalink-buttons" style="display:none;">
+					<a id="permalink-save" href="#save"><%= _('Save') -%></a>
+					<a id="permalink-cancel" href="#cancel"><%= _('Cancel') -%></a>
+				</span>
+			</div>
+		<% end -%>
+		<%= f.text_area :body_raw, {:label => 'Content', :class => 'mceEditor', :id => 'mce-content'}.merge(options) %>
+		<div class="clear">
+  		<table>
+  			<tr>
+  				<td>
+  					<%= f.text_field :tag_list, { :label => _('Tags')} -%>
+  					<div class="form-row">
+  						<p><%= _('Tags help other users find your page and will be used as the meta keywords for the document.') %></p>
+  					</div>
+  				</td>
+  				<td>
+  					<%= f.text_field :menu_list, { :label => _('Menus')} -%>
+  					<div class="form-row">
+  						<p><%= _("Menus show links to the current page on various locations on the site.  Enter 'HomeAboutUs' to have a link 
+  							to this page show up in the 'about us' section on the home page.  Enter 'HomeCountries' to have a link to this page
+  							show up under the 'countries' section on the home page.") %></p>
+  					</div>
+  				</td>
+  			</tr>
+  		</table>
+    </div>
+		<div class="instruction clear">
+			<%= _('To include a youtube video use: [youtube: address_of_video]') %>
+			<%= _('For example: [youtube: http://www.youtube.com/watch?v=J0K_s81Xe3E]') %>
+		</div>
+		<%= f.hidden_field :locale %>
+		<%= f.hidden_field :parent_id %>
+	<% end %>
+</div>
+
+<%= mce_fields(admin_uploads_path + '/images.js', admin_uploads_path + '/files.js', admin_uploads_path(:format => 'js'), @site.class.to_s, @site.id) -%>
+<%= include_tiny_mce_js_if_needed -%>
+<%= tiny_mce_init_if_needed -%>
+<% content_for :head do  -%>
+	<%= javascript_include_tag 'tiny_mce_helper' %>
+<% end -%>

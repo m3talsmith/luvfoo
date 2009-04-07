@@ -1,0 +1,24 @@
+<div class="left" id="column_l">	
+	<h1><%= _('%{group_name} - Events') % {:group_name => @group.name} %></h1>
+	<%= render :partial => 'groups/group_nav', :locals => {:group => @group} %>
+	<div id="events" class="activity_box">
+		<h2><%= _('Events') %> 
+		  <% if manager? -%><span><a href="<%= new_group_event_path(@group) %>" class="view-all"><%= _('Add Event') %></a></span><% end -%>
+		  <span><a target="_blank" href="http://www.google.com/calendar/render?cid=<%=group_events_url(@group, :format => 'ics')%>">
+    	  <img height="20px" alt="<%= _('Add events from this group to Google calendar') %>" src="http://www.google.com/calendar/images/ext/gc_button1.gif" border="0">
+    	</a></span>
+    	<span>
+  	    <%= link_to image_tag('ical.gif'), formatted_group_events_url(@group, :ics) %>
+  	  </span>
+  	</h2>
+    <table class="events-list">
+      <%= render :partial => 'event', :collection => @events %>
+    </table>
+    <div class="clear"></div>
+  	<%= will_paginate @events, :previous_label => _('&laquo; Previous'), :next_label => _('Next &raquo;') %>
+  </div>
+	<div class="clear"></div>
+</div>
+<div class="right" id="column_r">
+	<%= render :partial => 'groups/group_info' %>
+</div>

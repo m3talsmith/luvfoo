@@ -1,0 +1,6 @@
+<h1><%= _('Add Page') %></h1>
+<p><%= link_to 'Cancel', admin_pages_path -%></p>
+<%= render :partial => 'form', :locals => { :edit => false,
+																						:url => admin_pages_path,
+																						:html => { :method => :post },
+																						:options => {} } %>

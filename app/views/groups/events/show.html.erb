@@ -1,0 +1,67 @@
+<div class="left" id="column_l">	
+	<h1><%= _('%{group_name} - Event') % {:group_name => @group.name} %></h1>
+	<%= render :partial => 'groups/group_nav', :locals => {:group => @group} %>
+
+  <div id="hcalendar-event-title" class="vevent">
+    <h2 class="summary"><%= @event.title %></h2>
+    
+    <div>
+      <span class="desc">Time:</span>
+      <abbr title="<%=@event.start_at%>" class="dtstart"><%= @event.start_at.to_s(:long) %></abbr>    
+      <% if @event.end_at -%>
+      to <abbr title="<%=@event.end_at%>" class="dtend"><%= @event.end_at.to_s(:long) %></abbr> 
+      <% end -%>
+    </div>
+
+    <% if @event.location && @event.location.length > 0 -%>  
+      <div>
+        <span class="desc">Location:</span>
+        <span class="location"><%= @event.location %></span>
+      </div>
+    <% end -%>
+        
+    <% if @event.uri && @event.uri.length > 0 -%>
+      <div>
+        <a href="<%= @event.uri %>" class="url">Event Website</a>
+      </div>
+    <% end -%>
+    
+    <% if @event.summary && @event.summary.length > 0 -%>
+      <div class="summary">
+        <%= @event.summary %>
+      </div>
+    <% end -%> 
+    
+    <div class="description">
+      <%= @event.description %>
+    </div>
+    
+    <% if @event.tags.length > 0 -%>
+      <div class="tags">
+        Tags: 
+        <% @event.tags.each do |tag| -%>
+          <a href="/groups/events/tags/<%=tag.name%>" rel="tag"><%=tag.name%></a> 
+        <% end -%>
+      </div>
+    <% end -%>
+    
+    <div>
+      <h3>Attending:</h3>
+      <% @event.attendees.each do |attendee| -%>
+        <div class="attendee">
+          <%= icon attendee %>
+				  <%= link_to h(attendee.full_name), profile_path(attendee) %>
+				</div>
+      <% end -%>
+    </div>
+  </div>
+    
+	<% if manager? -%>
+		<%= link_to _('Edit'), edit_group_event_path(@group, @event) -%>
+		| <%= link_to _('Delete'), group_event_path(@group, @event), :method => :delete -%>
+	<%- end -%>
+</div>
+
+<div class="right" id="column_r">
+	<%= render :partial => 'groups/group_info' %>
+</div>

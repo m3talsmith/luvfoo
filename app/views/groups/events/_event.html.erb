@@ -1,0 +1,30 @@
+<tr class="vevent">
+  <td class="date">
+    <div class="date-month"><%= event.start_at.strftime("%b") %></div>
+    <div class="date-day"><%= event.start_at.day %></div>
+  </td>
+  <td>
+    <a href="<%= group_event_path(@group, event) %>" title="<%= event.title %>">
+      <span class="title"><%= event.title %></span>
+    </a>
+    <div class="summary"><%= event.summary %></div>
+    <% if event.uri.length > 0 -%>
+      <a href="<%= event.uri %>" class="url" target="_blank">Event Website</a>
+    <% end -%>
+    <div class="location"><%= event.location %></div>
+  </td>
+  <td class="attendees">
+    <div id="attend_<%=event.dom_id%>">
+      <% if event.start_at > DateTime.now -%>
+        <% @event_user = @user_events.find {|event_user| event_user.event_id == event.id } if @user_events.length > 0 -%>        
+        <% if @event_user -%>
+          <%= render :partial => 'events/not_attending', :locals => {:event => event, :event_user => @event_user} %>
+        <% else -%>
+          <%= render :partial => 'events/attending', :locals => {:event => event} %>
+        <% end -%>
+      <% else -%>
+        <p><%= _('Event has passed') %></p>
+      <% end -%>
+    </div>
+  </td>
+</tr>

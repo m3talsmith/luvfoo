@@ -3,17 +3,7 @@ namespace :thin do
     desc "DRY Methods for cluster tasks"
     task :setup => :environment do
       def load_config
-        config = {}
-        config_file = "#{RAILS_ROOT}/config/mongrel_cluster.yml"
-        if File.exist?(config_file)
-          config = YAML::load_file(config_file)
-        else
-          config[:log_file]     = "log/thin.log"
-          config[:pid_file]     = "tmp/pids/thin.pid"
-          config[:port]         = 3000
-          config[:environment]  = RAILS_ENV
-          config[:servers]      = (RAILS_ENV == "production") ? 8 : 3
-        end
+        config = YAML::load_file("config/mongrel_cluster.yml")
         
         return config
       end

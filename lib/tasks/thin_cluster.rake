@@ -17,54 +17,50 @@ namespace :thin do
         
         return config
       end
-      
-      def thin_command(state = "start")
-        config  = load_config
-        command = ""
-        
-        case state
-        when "start"
-          config["servers"].times do |i|
-            port      = (config['port'] + i)
-            pid_file  = config['pid_file'].split(".").join(".#{port}.")
-            connect   = (%^
-thin start -A rails -d
--P #{pid_file}
--p #{port}
--l #{config["log_file"]}
--e #{config["environment"]}
-            ^).split("\n").join(" ").strip!
-            command.length > 0 ? command += " \\\n\t&& #{connect}" : command = " \\\n\t#{connect}"
-          end
-        when "stop"
-          command = (%^
-thin stop -A rails -d
--s #{config["servers"]}
--P #{config["pid_file"]}
-          ^).split("\n").join(" ").chomp
-        end
-        
-        return command
-      end
     end
     
     desc "Start your thin cluster"
     task :start => :setup do
       system "cd #{RAILS_ROOT}"
+      config  = load_config
       
-      puts "Starting thin instances: #{thin_command}"
-      system thin_command
+      puts "Starting thin instances:"
+      config["servers"].times do |i|
+        port      = (config['port'] + i)
+        pid_file  = config['pid_file'].split(".").join(".#{port}.")
+        command = (%^
+thin start -A rails -d
+-P #{pid_file}
+-p #{port}    
+-l #{config["log_file"]}
+-e #{config["environment"]}
+        ^).split("\n").join(" ").strip!
+        
+        puts command
+        
+        Thread.new do
+          system command
+        end
+      end
     end
     
     desc 'Stop your thin cluster'
     task :stop => :setup do
       system "cd #{RAILS_ROOT}"
+      config  = load_config
       
-      puts "Stopping thin instances: #{thin_command('stop')}"
-      system thin_command("stop")
+      puts "Stopping thin instances:"
+      command = (%^
+thin stop -A rails -d
+-s #{config["servers"]}
+-P #{config["pid_file"]}
+      ^).split("\n").join(" ").strip!
+      
+      puts    command
+      system  command
     end
     
-    desc 'Restarting your thin cluster'
+    desc 'Restart your thin cluster'
     task :restart => [:stop, :start] do
     end
   end

@@ -19,19 +19,23 @@ namespace :thin do
       end
       
       def thin_command(state = "start")
-        config = load_config
+        config  = load_config
         command = ""
         
         case state
         when "start"
-          command = (%^
+          config["servers"].times do |i|
+            port      = (config['port'] + i)
+            pid_file  = config['pid_file'].split(".").join(".#{port}.")
+            connect   = (%^
 thin start -A rails -d
--s #{config["servers"]}
--P #{config["pid_file"]}
--p #{config["port"]}
+-P #{pid_file}
+-p #{port}
 -l #{config["log_file"]}
 -e #{config["environment"]}
-          ^).split("\n").join(" ").chomp
+            ^).split("\n").join(" ").strip!
+            command.length > 0 ? command += " \\\n\t&& #{connect}" : command = " \\\n\t#{connect}"
+          end
         when "stop"
           command = (%^
 thin stop -A rails -d

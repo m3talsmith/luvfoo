@@ -27,16 +27,16 @@ namespace :thin do
           command = (%^
 thin start -A rails -d
 -s #{config["servers"]}
--P #{RAILS_ROOT}/#{config["pid_file"]}
+-P #{config["pid_file"]}
 -p #{config["port"]}
--l #{RAILS_ROOT}/#{config["log_file"]}
+-l #{config["log_file"]}
 -e #{config["environment"]}
           ^).split("\n").join(" ").chomp
         when "stop"
           command = (%^
 thin stop -A rails -d
 -s #{config["servers"]}
--P #{RAILS_ROOT}/#{config["pid_file"]}
+-P #{config["pid_file"]}
           ^).split("\n").join(" ").chomp
         end
         

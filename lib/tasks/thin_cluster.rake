@@ -31,7 +31,7 @@ namespace :thin do
         command = (%^
 thin start -A rails -d
 -P #{pid_file}
--p #{port}    
+-p #{port}
 -l #{config["log_file"]}
 -e #{config["environment"]}
         ^).split("\n").join(" ").strip!

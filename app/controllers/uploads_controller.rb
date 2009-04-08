@@ -19,25 +19,43 @@ class UploadsController < ApplicationController
     # Standard, one-at-a-time, upload action
     @upload = @parent.uploads.build(params[:upload])
     @upload.user = current_user
-    @upload.save!
-    message = _('Successfully uploaded file.')
-    upload_json = basic_uploads_json(@upload)
-    
-    respond_to do |format|
-
-      format.html do
-        flash[:notice] = message
-        redirect_to get_redirect
-      end
-            
-      format.js do
-        responds_to_parent do
-          render :update do |page|
-            page << "upload_file_callback('#{upload_json}');"
+    if @upload.save
+      message = _('Successfully uploaded file.')
+      upload_json = basic_uploads_json(@upload)
+      
+      respond_to do |format|
+      
+        format.html do
+          flash[:notice] = message
+          redirect_to get_redirect
+        end
+              
+        format.js do
+          responds_to_parent do
+            render :update do |page|
+              page << "upload_file_callback('#{upload_json}');"
+            end
           end
         end
+        
       end
-      
+    else
+      respond_to do |format|
+        message = _('Successfully uploaded failed.')
+        format.html do
+          flash[:notice] = message
+          redirect_to get_redirect
+        end
+              
+        format.js do
+          responds_to_parent do
+            render :update do |page|
+              page << "upload_file_fail_callback(#{message})"
+            end
+          end
+        end
+        
+      end
     end
   rescue => ex
     message = _("An error occured while uploading the file: %{error}.  Please ensure that the file is valid.  
